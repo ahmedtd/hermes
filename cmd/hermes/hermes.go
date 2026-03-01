@@ -37,6 +37,7 @@ func main() {
 	})
 	if err != nil {
 		slog.ErrorContext(ctx, "Error creating model", slog.Any("err", err))
+		os.Exit(1)
 	}
 
 	setStateTool, getStateTool, err := sessionstate.Tools()
