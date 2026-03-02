@@ -178,8 +178,6 @@ func (s *GCSSessionService) readJSON(ctx context.Context, key string, dest any) 
 		return fmt.Errorf("while unmarshaling session: %w", err)
 	}
 
-	slog.DebugContext(ctx, "gcssessionservice read JSON", slog.Any("val", dest))
-
 	return nil
 }
 
