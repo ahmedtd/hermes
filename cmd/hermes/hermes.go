@@ -10,7 +10,7 @@ import (
 
 	"cloud.google.com/go/storage"
 	"github.com/ahmedtd/hermes/lib/gcssessionservice"
-	"github.com/ahmedtd/hermes/lib/tools/exectool"
+	"github.com/ahmedtd/hermes/lib/tools/celtool"
 	"github.com/ahmedtd/hermes/lib/tools/sessionstate"
 	"google.golang.org/adk/agent"
 	"google.golang.org/adk/agent/llmagent"
@@ -29,7 +29,9 @@ func main() {
 	ctx := context.Background()
 
 	flag.Parse()
-	slog.SetLogLoggerLevel(slog.LevelDebug)
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelDebug,
+	})))
 
 	model, err := gemini.NewModel(ctx, "gemini-2.5-pro", &genai.ClientConfig{
 		Backend:  genai.BackendVertexAI,
@@ -50,12 +52,19 @@ func main() {
 	}
 	tools = append(tools, setStateTool, getStateTool)
 
-	execTools, err := exectool.Tools()
+	// execTools, err := exectool.Tools()
+	// if err != nil {
+	// 	slog.ErrorContext(ctx, "Error creating execution tools", slog.Any("err", err))
+	// 	os.Exit(1)
+	// }
+	// tools = append(tools, execTools...)
+
+	celTools, err := celtool.Tools()
 	if err != nil {
-		slog.ErrorContext(ctx, "Error creating execution tools", slog.Any("err", err))
+		slog.ErrorContext(ctx, "Error creating CEL tools", slog.Any("err", err))
 		os.Exit(1)
 	}
-	tools = append(tools, execTools...)
+	tools = append(tools, celTools...)
 
 	hermesAgent, err := llmagent.New(llmagent.Config{
 		Name:        "hermes",
