@@ -11,6 +11,7 @@ import (
 	"cloud.google.com/go/storage"
 	"github.com/ahmedtd/hermes/lib/gcssessionservice"
 	"github.com/ahmedtd/hermes/lib/tools/celtool"
+	"github.com/ahmedtd/hermes/lib/tools/jstool"
 	"github.com/ahmedtd/hermes/lib/tools/sessionstate"
 	"google.golang.org/adk/agent"
 	"google.golang.org/adk/agent/llmagent"
@@ -65,6 +66,13 @@ func main() {
 		os.Exit(1)
 	}
 	tools = append(tools, celTools...)
+
+	jsTools, err := jstool.Tools()
+	if err != nil {
+		slog.ErrorContext(ctx, "Error creating JS tools", slog.Any("err", err))
+		os.Exit(1)
+	}
+	tools = append(tools, jsTools...)
 
 	hermesAgent, err := llmagent.New(llmagent.Config{
 		Name:        "hermes",
