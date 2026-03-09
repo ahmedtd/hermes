@@ -5,8 +5,6 @@ import (
 	"flag"
 	"log/slog"
 	"os"
-	"slices"
-	"strings"
 
 	"cloud.google.com/go/storage"
 	"github.com/ahmedtd/hermes/lib/gcssessionservice"
@@ -24,6 +22,7 @@ import (
 
 var (
 	stateBucket = flag.String("state-bucket", "", "The GCS bucket to store the agent's persistent state")
+	adkFlags    = full.DefineFlags()
 )
 
 func main() {
@@ -99,17 +98,8 @@ func main() {
 		SessionService: sessionService,
 	}
 
-	// ADK's built-in launchers explode if they are handed arg lists with flags
-	// they don't understand.  This is a problem if you want to have additional
-	// flags in your own main.
-	filteredArgs := os.Args[1:]
-	filteredArgs = slices.DeleteFunc(filteredArgs, func(x string) bool {
-		return strings.HasPrefix(x, "-state-bucket") || strings.HasPrefix(x, "--state-bucket")
-	})
-
-	l := full.NewLauncher()
-	if err = l.Execute(ctx, config, filteredArgs); err != nil {
-		slog.ErrorContext(ctx, "Error executing ADK launcher", slog.Any("err", err), slog.String("syntax", l.CommandLineSyntax()))
+	if err = full.Run(ctx, adkFlags, config); err != nil {
+		slog.ErrorContext(ctx, "Error executing ADK launcher", slog.Any("err", err))
 		os.Exit(1)
 	}
 }
