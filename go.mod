@@ -7,6 +7,7 @@ require (
 	github.com/dop251/goja v0.0.0-20260226184354-913bd86fb70c
 	github.com/google/cel-go v0.27.0
 	github.com/google/uuid v1.6.0
+	github.com/tetratelabs/wazero v1.11.0
 	google.golang.org/adk v0.4.0
 	google.golang.org/api v0.252.0
 	google.golang.org/genai v1.46.0

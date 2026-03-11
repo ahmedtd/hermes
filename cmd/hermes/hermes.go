@@ -8,8 +8,7 @@ import (
 
 	"cloud.google.com/go/storage"
 	"github.com/ahmedtd/hermes/lib/gcssessionservice"
-	"github.com/ahmedtd/hermes/lib/tools/celtool"
-	"github.com/ahmedtd/hermes/lib/tools/jstool"
+	"github.com/ahmedtd/hermes/lib/tools/gotool"
 	"github.com/ahmedtd/hermes/lib/tools/sessionstate"
 	"google.golang.org/adk/agent"
 	"google.golang.org/adk/agent/llmagent"
@@ -59,19 +58,26 @@ func main() {
 	// }
 	// tools = append(tools, execTools...)
 
-	celTools, err := celtool.Tools()
-	if err != nil {
-		slog.ErrorContext(ctx, "Error creating CEL tools", slog.Any("err", err))
-		os.Exit(1)
-	}
-	tools = append(tools, celTools...)
+	// celTools, err := celtool.Tools()
+	// if err != nil {
+	// 	slog.ErrorContext(ctx, "Error creating CEL tools", slog.Any("err", err))
+	// 	os.Exit(1)
+	// }
+	// tools = append(tools, celTools...)
 
-	jsTools, err := jstool.Tools()
+	// jsTools, err := jstool.Tools()
+	// if err != nil {
+	// 	slog.ErrorContext(ctx, "Error creating JS tools", slog.Any("err", err))
+	// 	os.Exit(1)
+	// }
+	// tools = append(tools, jsTools...)
+
+	goTools, err := gotool.Tools()
 	if err != nil {
-		slog.ErrorContext(ctx, "Error creating JS tools", slog.Any("err", err))
+		slog.ErrorContext(ctx, "Error creating Go tools", slog.Any("err", err))
 		os.Exit(1)
 	}
-	tools = append(tools, jsTools...)
+	tools = append(tools, goTools...)
 
 	hermesAgent, err := llmagent.New(llmagent.Config{
 		Name:        "hermes",
